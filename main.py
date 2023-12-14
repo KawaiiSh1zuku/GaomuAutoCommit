@@ -12,7 +12,8 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
     }
 cookie = None
-sid = 373524
+sid = 0
+courseID = 0
 
 def Login(account, password):
     url = "https://data.gaomuxuexi.com/s_login"
@@ -30,12 +31,13 @@ def Login(account, password):
     global sid
     cookie = r.cookies
     sid = r.json()['sID']
+    courseID = r.json()['courses'][0]["couID"]
     print(f"登录用户: {r.json()['class']['cName']} {r.json()['name']}")
 
 def ccgQry():
     url = "https://data.gaomuxuexi.com/s_ccgQry"
     data = {
-        "COURSE": 105,
+        "COURSE": courseID,
         "STATE": 3
     }
     r = requests.post(url, json=data, headers=headers, cookies=cookie)
@@ -66,7 +68,7 @@ def ccgLstQ(ccgId):
 def getAnswer(Qs):
     for i in range(len(Qs)):
         qid = Qs[i][0]
-        url = f"https://data.gaomuxuexi.com/q_get?COURSE=105&QLIB=0&QID={qid}&Q=1&V=1"
+        url = f"https://data.gaomuxuexi.com/q_get?COURSE={courseID}&QLIB=0&QID={qid}&Q=1&V=1"
         r = requests.get(url, headers=headers, cookies=cookie)
         if (r.json()["no"] == 200):
             Q = r.json()["Q"]
@@ -88,7 +90,7 @@ def qCommit(Qid, Answer, TKQIDX, TKID, QTXT):
         "QTXT": QTXT,
         "TKQIDX": TKQIDX,
         "TKID": TKID,
-        "COURSE": 105,
+        "COURSE": courseID,
         "BOOKVER": 1
     }
     r = requests.post(url, headers=headers, cookies=cookie, json=params)
