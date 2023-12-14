@@ -12,7 +12,7 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
     }
 cookie = None
-sid = 0
+sid = 373524
 
 def Login(account, password):
     url = "https://data.gaomuxuexi.com/s_login"
@@ -35,8 +35,8 @@ def Login(account, password):
 def ccgQry():
     url = "https://data.gaomuxuexi.com/s_ccgQry"
     data = {
-        "COURSE": 5,
-        "STATE": 1
+        "COURSE": 105,
+        "STATE": 3
     }
     r = requests.post(url, json=data, headers=headers, cookies=cookie)
     if (r.json()["no"] == 200):
@@ -66,7 +66,7 @@ def ccgLstQ(ccgId):
 def getAnswer(Qs):
     for i in range(len(Qs)):
         qid = Qs[i][0]
-        url = f"https://data.gaomuxuexi.com/q_get?COURSE=5&QLIB=0&QID={qid}&Q=1&V=1"
+        url = f"https://data.gaomuxuexi.com/q_get?COURSE=105&QLIB=0&QID={qid}&Q=1&V=1"
         r = requests.get(url, headers=headers, cookies=cookie)
         if (r.json()["no"] == 200):
             Q = r.json()["Q"]
@@ -88,7 +88,7 @@ def qCommit(Qid, Answer, TKQIDX, TKID, QTXT):
         "QTXT": QTXT,
         "TKQIDX": TKQIDX,
         "TKID": TKID,
-        "COURSE": 5,
+        "COURSE": 105,
         "BOOKVER": 1
     }
     r = requests.post(url, headers=headers, cookies=cookie, json=params)
@@ -101,6 +101,6 @@ def qCommit(Qid, Answer, TKQIDX, TKID, QTXT):
     time.sleep(8)
     
 if __name__ == "__main__":
-    Login("account", "password")
+    Login("acc", "pwd")
     ccgId = ccgQry()
     getAnswer(ccgLstQ(ccgId))
